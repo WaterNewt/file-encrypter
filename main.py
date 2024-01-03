@@ -29,12 +29,14 @@ def cli(args):
         open(file, 'wb').write(encrypted)
         print("Successfully encrypted file.")
         logging.info(f"Encrypted file '{file}'")
+        return encrypted
     elif args.decrypt:
         encrypted = open(file, 'rb').read()
         decrypted = utils.decrypt_text(encrypted, password)
         open(file, 'wb').write(decrypted)
         print("Successfully decrypted file.")
         logging.info(f"Decrypted file '{file}'")
+        return decrypted
 
 def main():
     parser = argparse.ArgumentParser(description="Encrypt or decrypt files")

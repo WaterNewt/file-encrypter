@@ -18,8 +18,9 @@ def generate_key(password):
     key = base64.urlsafe_b64encode(kdf.derive(password))
     return key
 
-def encrypt_text(text, password):
-    key = generate_key(password)
+def encrypt_text(text, password, key=None):
+    if key == None:
+        key = generate_key(password)
     fernet = Fernet(key)
     encrypted_text = fernet.encrypt(text)
     return encrypted_text

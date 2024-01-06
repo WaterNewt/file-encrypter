@@ -10,3 +10,5 @@ gui_test.py
 __pycache__
 .eggs
 env
+build
+dist

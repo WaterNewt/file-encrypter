@@ -10,7 +10,7 @@ import argparse
 max_args = 4
 specificed_args = len(sys.argv)-1
 filename = sys.argv[0]
-logging.basicConfig(filename="log.log", encoding="utf-8", level=logging.DEBUG)
+logging.basicConfig(filename="log.log", level=logging.DEBUG)
 
 argument_err_message = f"Error:\n{str(specificed_args)}/{str(max_args)} arguments were specified\nUse -h for help"
 password_err_message = "Error:\nIncorrect password"
@@ -19,24 +19,52 @@ help_message = f"""\nThis is a program, that is used to encrypt and decrypt file
 argument_err_message1 = help_message
 
 
+# I have a class Test Main(unittest.TestCase) brought out the problem with the def cli,
+# the file opened but did not close,
+# I changed the def cli
 def cli(args):
     file = args.file
     password = args.password
 
     if args.encrypt:
-        text = open(file, 'rb').read()
+        with open(file, 'rb') as file_in:
+            text = file_in.read()
         encrypted = utils.encrypt_text(text, password)
-        open(file, 'wb').write(encrypted)
+        with open(file, 'wb') as file_out:
+            file_out.write(encrypted)
         print("Successfully encrypted file.")
         logging.info(f"Encrypted file '{file}'")
         return encrypted
     elif args.decrypt:
-        encrypted = open(file, 'rb').read()
+        with open(file, 'rb') as file_in:
+            encrypted = file_in.read()
         decrypted = utils.decrypt_text(encrypted, password)
-        open(file, 'wb').write(decrypted)
+        with open(file, 'wb') as file_out:
+            file_out.write(decrypted)
         print("Successfully decrypted file.")
         logging.info(f"Decrypted file '{file}'")
         return decrypted
+
+
+# def old_cli(args):
+#     file = args.file
+#     password = args.password
+#
+#     if args.encrypt:
+#         text = open(file, 'rb').read()
+#         encrypted = utils.encrypt_text(text, password)
+#         open(file, 'wb').write(encrypted)
+#         print("Successfully encrypted file.")
+#         logging.info(f"Encrypted file '{file}'")
+#         return encrypted
+#     elif args.decrypt:
+#         encrypted = open(file, 'rb').read()
+#         decrypted = utils.decrypt_text(encrypted, password)
+#         open(file, 'wb').write(decrypted)
+#         print("Successfully decrypted file.")
+#         logging.info(f"Decrypted file '{file}'")
+#         return decrypted
+
 
 def main():
     parser = argparse.ArgumentParser(description="Encrypt or decrypt files")
@@ -55,6 +83,7 @@ def main():
         parser.error("Specify either -e/--encrypt or -d/--decrypt")
 
     cli(args)
+
 
 class gui:
     ct.set_appearance_mode("system")
